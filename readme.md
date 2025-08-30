@@ -26,16 +26,17 @@ Basic example: Generate a 20-song playlist
 python main.py --mode playlist --pop-size 120 --gens 150 \
   --selection tournament --crossover order1 --mutation swap \
   --playlist-size 20
-
+```
 Weekly timetable generation (5 days × 4 slots)
 
 ```bash
 python main.py --mode timetable --days 5 --slots-per-day 4 \--selection rank --crossover order1 \--mutation inversion
+```
 
-```bash
 Show available options
-
+```bash
 python main.py --help
+```
 
 ## Data
 
