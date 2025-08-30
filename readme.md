@@ -22,7 +22,7 @@ The application allows experimenting with different GA operators (selection, cro
 
 Basic example: Generate a 20-song playlist
 
-`````bash
+````bash
 python main.py --mode playlist --pop-size 120 --gens 150 \
   --selection tournament --crossover order1 --mutation swap \
   --playlist-size 20
