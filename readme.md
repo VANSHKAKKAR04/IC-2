@@ -44,6 +44,6 @@ python main.py --help
 - You can replace this with your own dataset (CSV) if desired.
 
 ## Author
-
-(Write your name and roll number here)
+VANSH KAKKAR
+(2022UCA1917)
 `````
