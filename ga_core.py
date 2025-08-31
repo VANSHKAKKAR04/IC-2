@@ -4,12 +4,23 @@ from typing import List, Sequence, Callable, Tuple
 Individual = List[int]
 Population = List[Individual]
 
+
 def seeded(seed: int | None):
     if seed is not None:
         random.seed(seed)
 
+
 def make_initial_population(n_pop: int, gene_pool: Sequence[int], chrom_len: int) -> Population:
     return [random.sample(gene_pool, k=chrom_len) for _ in range(n_pop)]
+
+
+def fix_length(ind: Individual, chrom_len: int, gene_pool: Sequence[int]) -> Individual:
+    """Ensure individual has exactly chrom_len genes."""
+    ind = ind[:chrom_len]  # trim if too long
+    while len(ind) < chrom_len:  # pad if too short
+        ind.append(random.choice(gene_pool))
+    return ind
+
 
 def evolve(
     fitness_fn: Callable[[Individual], float],
@@ -38,18 +49,24 @@ def evolve(
 
         next_pop: Population = elites[:]
         random.shuffle(parents)
-        for i in range(0, len(parents)-1, 2):
-            p1, p2 = parents[i], parents[i+1]
+        for i in range(0, len(parents) - 1, 2):
+            p1, p2 = parents[i], parents[i + 1]
             if random.random() < cx_prob:
                 c1, c2 = crossover(p1, p2)
             else:
                 c1, c2 = p1[:], p2[:]
+            # enforce length
+            c1 = fix_length(c1, chrom_len, gene_pool)
+            c2 = fix_length(c2, chrom_len, gene_pool)
             next_pop.extend([c1, c2])
+
         if len(next_pop) < pop_size:
-            next_pop.append(parents[-1][:])
+            last = fix_length(parents[-1][:], chrom_len, gene_pool)
+            next_pop.append(last)
 
         for ind in next_pop[elitism:]:
             mutation(ind, mut_rate)
+            ind[:] = fix_length(ind, chrom_len, gene_pool)
 
         pop = next_pop[:pop_size]
         best_hist.append(max(fitnesses))

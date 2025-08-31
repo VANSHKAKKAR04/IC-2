@@ -65,8 +65,20 @@ def main():
 
         print("\n=== Best Timetable ===")
         print("Score:", round(score, 4))
+
+        # Defensive printing (avoid IndexError)
+        expected_len = args.days * args.slots_per_day
+        if len(best) < expected_len:
+            print(f"⚠ Warning: timetable chromosome shorter than expected ({len(best)} vs {expected_len})")
+
         for d in range(args.days):
-            row = [SONGS[best[d * args.slots_per_day + s]].title for s in range(args.slots_per_day)]
+            row = []
+            for s in range(args.slots_per_day):
+                idx = d * args.slots_per_day + s
+                if idx < len(best):
+                    row.append(SONGS[best[idx]].title)
+                else:
+                    row.append("N/A")
             print(f"Day {d+1:02d}: " + " | ".join(row))
 
     else:
